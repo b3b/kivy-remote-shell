@@ -1,19 +1,13 @@
 __version__ = '0.1'
 
-# install_twisted_rector must be called before importing  and using the reactor
-from kivy.support import install_twisted_reactor
-install_twisted_reactor()
-
 import socket
 import fcntl
 import struct
-from twisted.internet import reactor
-from twisted.cred import portal, checkers
-from twisted.conch import manhole, manhole_ssh
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import StringProperty
 from kivy.app import App
+from android import AndroidService
 
 app = None
 
@@ -47,19 +41,13 @@ Builder.load_string('''
     Label:
         text: 'ssh -p8000 admin@{0}'.format(root.lan_ip)
         font_size: 20
-        size_hint_y: .8
+        size_hint_y: .6
+    Button:
+        text: 'Exit'
+        size_hint: .4, .1
+        pos_hint: {'center_x': .5}
+        on_press: app.quit_app()
 ''')
-
-def getManholeFactory(namespace, **passwords):
-    realm = manhole_ssh.TerminalRealm()
-    def getManhole(_):
-        return manhole.ColoredManhole(namespace)
-    realm.chainedProtocolFactory.protocolFactory = getManhole
-    p = portal.Portal(realm)
-    p.registerChecker(
-        checkers.InMemoryUsernamePasswordDatabaseDontUse(**passwords))
-    f = manhole_ssh.ConchFactory(p)
-    return f
 
 
 class MainScreen(FloatLayout):
@@ -93,9 +81,14 @@ class RemoteKivyApp(App):
     def build(self):
         global app
         app = self
-        self.connection = reactor.listenTCP(8000,
-                getManholeFactory(globals(), admin='kivy'))
+        self.service = AndroidService('Kivy Remote Shell',
+                                      'remote shell is running')
+        self.service.start('8000')
         return MainScreen()
+
+    def quit_app(self):
+        self.service.stop()
+        self.stop()
 
 if __name__ == '__main__':
     RemoteKivyApp().run()

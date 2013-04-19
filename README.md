@@ -20,11 +20,11 @@ Compile for android
 You must have setup http://github.com/kivy/python-for-android
 
 ```
-$ git clone git://github.com/kivy/kivy-remote-shell
+$ git clone -b service --single-branch git://github.com/b3b/python-for-android.git
 $ cd python-for-android
 $ ./distribute.sh -m 'openssl pycrypto pyasn1 pyjnius twisted kivy'
 $ cd dist/default
-$ ./build.py --package org.kivy.sshshell --name "Kivy Remote Shell" \
+$ ./build.py --package org.kivy.sshshell_service --name "Kivy Remote Shell (service)" \
   --version 1 --dir ../../../kivy-remote-shell/ \
   --icon ../../../kivy-remote-shell/icon.png --permission INTERNET debug installd
 ```
