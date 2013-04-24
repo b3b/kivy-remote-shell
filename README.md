@@ -5,6 +5,12 @@ Remote SSH+Python interactive shell application. Great for having a remote
 python shell on an embed platform like android.
 
 
+Differences from upstream
+-------------------------
+
+This fork is an example of Android service component usage, shell is running in background.
+
+
 Instructions
 ------------
 
@@ -20,7 +26,7 @@ Compile for android
 You must have setup http://github.com/kivy/python-for-android
 
 ```
-$ git clone -b service --single-branch git://github.com/b3b/python-for-android.git
+$ git clone git://github.com/kivy/kivy-remote-shell
 $ cd python-for-android
 $ ./distribute.sh -m 'openssl pycrypto pyasn1 pyjnius twisted kivy'
 $ cd dist/default
